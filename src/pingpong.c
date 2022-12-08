@@ -6,13 +6,14 @@
 void	solver_fork(char *path, char **env, int *pipe_out, int *pipe_in)
 {
 	int	solver_return;
-	char	*execve_null_strs[1];
+	char	*execve_null_strs[2];
 
 	if (dup2(pipe_in[0], STDIN_FILENO) == -1)
 		write(2, "dup2 error\n", 12);
 	if (dup2(pipe_out[1], STDOUT_FILENO) == -1)
 		write(2, "dup2 error\n", 12);
-	execve_null_strs[0] = 0;
+	execve_null_strs[0] = path;
+	execve_null_strs[1] = 0;
 	solver_return = execve(path, execve_null_strs, env);
 	exit(solver_return);
 }
@@ -61,24 +62,28 @@ int	pingpong(char *path1, char **path2, char **env)
 		write(2, "fork error\n", 12);
 		return (-1);
 	}
-	pid_fork2 = fork();
-	if (pid_fork2 == -1)
-	{
-		write(2, "fork error\n", 12);
-		return (-1);
-	}
 	if (pid_fork1 == 0)
 		solver_fork(path1, env, pipe_solver_to_subject, pipe_solver_to_subject);
-	else if (pid_fork2 == 0)
-		subject_fork(path2, env, pipe_subject_to_solver, pipe_solver_to_subject);
 	else
 	{
-		if (waitpid(pid_fork2, NULL, 0) == -1)
+		pid_fork2 = fork();
+		if (pid_fork2 == -1)
 		{
-			write(2, "subject crashed\n", 17);
+			write(2, "fork error\n", 12);
+			kill(pid_fork1, SIGINT);
 			return (-1);
 		}
-		kill(pid_fork1, SIGINT);
+		if (pid_fork2 == 0)
+			subject_fork(path2, env, pipe_subject_to_solver, pipe_solver_to_subject);
+		else
+		{
+			if (waitpid(pid_fork2, NULL, 0) == -1)
+			{
+				write(2, "subject crashed\n", 17);
+				return (-1);
+			}
+			kill(pid_fork1, SIGINT);
+		}
 	}
 	return (0);
 }
