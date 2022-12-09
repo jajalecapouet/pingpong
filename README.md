@@ -5,6 +5,9 @@ A useful futur project
 
 Not working atm  
 
+In process :  
+Using mkfifo() unstead of pipe()
+
 command "make" will create the pingpong binary + 2 binaries "ping" and "pong" to test the program.  
 
 then command "./script" does exactly the test "./pingpong ping pong"  
