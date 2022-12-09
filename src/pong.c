@@ -9,11 +9,11 @@ int main()
 {
 	char line[20];
 	line[19] = 0;
-	fprintf(stderr, "pong launched\n");
+	fprintf(stderr, "pong : Me too !\n");
 	while (1)
 	{
 		fgets(line, 48, stdin);
-		fprintf(stderr, "%s", line);
+		fprintf(stderr, "pong : ping said to me \"%s\"", line);
 		sleep(1);
 		printf("coucou\n");
 	}
