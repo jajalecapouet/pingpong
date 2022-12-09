@@ -13,6 +13,8 @@ SRC =		$(addprefix ${PATH_SRCS}/,${LST_SRCS})
 OBJS =		$(addprefix ${PATH_OBJS}/,${LST_OBJS})
 
 all :				${NAME} Makefile
+					${CC} src/ping.c -o ping
+					${CC} src/pong.c -o pong
 
 ${NAME} :			${OBJS}
 					${CC} ${FLAGS} ${OBJS} -o $@
@@ -27,7 +29,7 @@ clean :
 					rm -rf obj
 
 fclean :			clean
-					rm ${NAME}
+					rm -f ${NAME} ping pong
 
 re :				fclean all
 
