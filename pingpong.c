@@ -1,7 +1,10 @@
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 void	solver_fork(char *path, char **env, int *pipe_out, int *pipe_in)
 {
@@ -12,8 +15,12 @@ void	solver_fork(char *path, char **env, int *pipe_out, int *pipe_in)
 		write(2, "dup2 error\n", 12);
 	if (dup2(pipe_out[1], STDOUT_FILENO) == -1)
 		write(2, "dup2 error\n", 12);
+	close(pipe_in[1]);
+	close(pipe_out[0]);
 	execve_null_strs[0] = 0;
+	fprintf(stderr, "solver start\n");
 	solver_return = execve(path, execve_null_strs, env);
+	fprintf(stderr, "solver end\n");
 	exit(solver_return);
 }
 
@@ -25,7 +32,12 @@ void	subject_fork(char **path, char **env, int *pipe_out, int *pipe_in)
 		write(2, "dup2 error\n", 12);
 	if (dup2(pipe_out[1], STDOUT_FILENO) == -1)
 		write(2, "dup2 error\n", 12);
+	close(pipe_in[1]);
+	close(pipe_out[0]);
+	fprintf(stderr, "subject start\n");
 	subject_return = execve(path[0], path, env);
+	fprintf(stderr, "subject end\n");
+	exit(subject_return);
 }
 
 int	pingpong(char *path1, char **path2, char **env)
@@ -61,24 +73,28 @@ int	pingpong(char *path1, char **path2, char **env)
 		write(2, "fork error\n", 12);
 		return (-1);
 	}
-	pid_fork2 = fork();
-	if (pid_fork2 == -1)
-	{
-		write(2, "fork error\n", 12);
-		return (-1);
-	}
 	if (pid_fork1 == 0)
 		solver_fork(path1, env, pipe_solver_to_subject, pipe_solver_to_subject);
-	else if (pid_fork2 == 0)
-		subject_fork(path2, env, pipe_subject_to_solver, pipe_solver_to_subject);
-	else
+	else 
 	{
-		if (waitpid(pid_fork2, NULL, 0) == -1)
+		pid_fork2 = fork();
+		if (pid_fork2 == -1)
 		{
-			write(2, "subject crashed\n", 17);
+			write(2, "fork error\n", 12);
 			return (-1);
 		}
-		kill(pid_fork1, SIGINT);
+		if (pid_fork2 == 0)
+			subject_fork(path2, env, pipe_subject_to_solver, pipe_solver_to_subject);
+		else
+		{
+			if (waitpid(pid_fork2, NULL, 0) == -1)
+			{
+				write(2, "subject crashed\n", 17);
+				return (-1);
+			}
+			write(2, "end of sim\n", 12);
+			kill(pid_fork1, SIGINT);
+		}
 	}
 	return (0);
 }
