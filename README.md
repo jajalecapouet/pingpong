@@ -13,16 +13,14 @@ command "make" will create the pingpong binary + 2 binaries "ping" and "pong" to
 then command "./script" does exactly the test "./pingpong ping pong"  
 
 Test succeed if terminal output become :  
-solver start  
-subject start  
-ping launched  
-pong launched  
-(sleep 1 sec)hello  
-(sleep 1 sec)coucou  
-(sleep 1 sec)hello  
-(sleep 1 sec)coucou  
-(sleep 1 sec)hello  
-(sleep 1 sec)coucou  
-(sleep 1 sec)hello  
-(sleep 1 sec)coucou  
+pingpong : ping start  
+pingpong : pong start  
+pong : Me too !  
+ping : I'm alive !  
+pong : ping said to me "PING!"   
+ping : pong said to me "PONG!"  
+pong : ping said to me "PING!"  
+ping : pong said to me "PONG!"  
+ping : pong said to me "PING!"  
+pong : ping said to me "PONG!"  
 ...  

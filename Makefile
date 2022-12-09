@@ -30,7 +30,6 @@ clean :
 
 fclean :			clean
 					rm -f ${NAME} ping pong
-					rm -rf fifofiles
 
 re :				fclean all
 
