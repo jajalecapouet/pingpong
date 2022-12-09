@@ -14,7 +14,11 @@ int main()
 	{
 		sleep(1);
 		printf("PING!\n");
-		fgets(line, 48, stdin);
-		fprintf(stderr, "ping : pong said to me \"%s\"\n", line);
+		//fgets(line, 48, stdin);
+		unsigned char	c = fgetc(stdin);
+		while (c != EOF && c != '\n')
+			fprintf(stderr, "%c", c);
+		fprintf(stderr, "\n");
+		fprintf(stderr, "ping : pong said to me \"lul\"\n");
 	}
 }
