@@ -9,12 +9,12 @@ int main()
 {
 	char line[20];
 	line[19] = 0;
-	fprintf(stderr, "s1 launched\n");
+	fprintf(stderr, "ping launched\n");
 	while (1)
 	{
+		sleep(1);
+		printf("hello\n");
 		fgets(line, 48, stdin);
 		fprintf(stderr, "%s", line);
-		printf("hello\n");
-		sleep(1);
 	}
 }
