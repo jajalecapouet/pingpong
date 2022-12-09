@@ -13,12 +13,8 @@ int main()
 	while (1)
 	{
 		sleep(1);
-		printf("PING!\n");
-		//fgets(line, 48, stdin);
-		unsigned char	c = fgetc(stdin);
-		while (c != EOF && c != '\n')
-			fprintf(stderr, "%c", c);
-		fprintf(stderr, "\n");
-		fprintf(stderr, "ping : pong said to me \"lul\"\n");
+		write(1, "PING!\n", 7);
+		fgets(line, 48, stdin);
+		fprintf(stderr, "ping : pong said to me %s", line);
 	}
 }

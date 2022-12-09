@@ -13,8 +13,8 @@ int main()
 	while (1)
 	{
 		fgets(line, 48, stdin);
-		fprintf(stderr, "pong : ping said to me \"%s\"\n", line);
+		fprintf(stderr, "pong : ping said to me %s", line);
 		sleep(1);
-		printf("PONG!\n");
+		write(1, "PONG!\n", 7);
 	}
 }

@@ -9,10 +9,18 @@
 #include <errno.h>
 #include <string.h>
 
-void	solver_fork(char *path, char **env, int fd_fifo_out, int fd_fifo_in)
+void	solver_fork(char *path, char **env, const char *fifo_out, const char *fifo_in)
 {
 	int	solver_return;
 	char	*execve_null_strs[1];
+
+	int	fd_fifo_in = open(fifo_in, O_RDONLY);
+	int	fd_fifo_out = open(fifo_out, O_WRONLY);
+	if (fd_fifo_in == -1 || fd_fifo_out == -1)
+	{
+		fprintf(stderr, "fifo open error : %d : %s\n", errno, strerror(errno));
+		exit(1);
+	}
 
 	if (dup2(fd_fifo_in, STDIN_FILENO) == -1)
 		write(2, "dup2 error\n", 12);
@@ -25,10 +33,17 @@ void	solver_fork(char *path, char **env, int fd_fifo_out, int fd_fifo_in)
 	exit(solver_return);
 }
 
-void	subject_fork(char **path, char **env, int fd_fifo_out, int fd_fifo_in)
+void	subject_fork(char **path, char **env, const char *fifo_out, const char *fifo_in)
 {
 	int	subject_return;
 
+	int	fd_fifo_out = open(fifo_out, O_WRONLY);
+	int	fd_fifo_in = open(fifo_in, O_RDONLY);
+	if (fd_fifo_in == -1 || fd_fifo_out == -1)
+	{
+		fprintf(stderr, "fifo open error : %d : %s\n", errno, strerror(errno));
+		exit(1);
+	}
 	if (dup2(fd_fifo_in, STDIN_FILENO) == -1)
 		write(2, "dup2 error\n", 12);
 	if (dup2(fd_fifo_out, STDOUT_FILENO) == -1)
@@ -60,20 +75,35 @@ int	pingpong(char *path1, char **path2, char **env)
 
 	fprintf(stderr, "fifos created\n");
 
-	int	fd_a_to_b_read = open(fifo1, O_RDONLY | O_NONBLOCK);
+	/*
+	int	fd_a_to_b_read = open(fifo1, O_RDONLY | O_ASYNC | O_NONBLOCK);
 	fprintf(stderr, "open fifo1 read_only done, his fd is %d.\n", fd_a_to_b_read);
-	int	fd_a_to_b_write = open(fifo1, O_WRONLY | O_NONBLOCK);
+	int	fd_a_to_b_write = open(fifo1, O_WRONLY | O_ASYNC);
 	fprintf(stderr, "open fifo1 write_only done, his fd is %d.\n", fd_a_to_b_write);
-	int	fd_b_to_a_read = open(fifo2, O_RDONLY | O_NONBLOCK);
+	int	fd_b_to_a_read = open(fifo2, O_RDONLY | O_ASYNC | O_NONBLOCK);
 	fprintf(stderr, "open fifo2 read_only done, his fd is %d.\n", fd_b_to_a_read);
-	int	fd_b_to_a_write = open(fifo2, O_WRONLY | O_NONBLOCK);
+	int	fd_b_to_a_write = open(fifo2, O_WRONLY | O_ASYNC);
 	fprintf(stderr, "open fifo2 write_only done, his fd is %d.\n", fd_b_to_a_write);
-	
 	if (fd_a_to_b_read == -1 || fd_a_to_b_write == -1 || fd_b_to_a_read == -1 || fd_b_to_a_write == -1)
 	{
 		fprintf(stderr, "fifo open error : %d : %s\n", errno, strerror(errno));
 		return (-1);
 	}
+	*/
+
+	/*
+	int	fd_a_to_b = open(fifo1, O_RDWR);
+	fprintf(stderr, "open fifo1 read_only done, his fd is %d.\n", fd_a_to_b);
+	int	fd_b_to_a = open(fifo2, O_RDWR);
+	fprintf(stderr, "open fifo2 read_only done, his fd is %d.\n", fd_b_to_a);
+
+	if (fd_a_to_b == -1 || fd_b_to_a == -1)
+	{
+		fprintf(stderr, "fifo open error : %d : %s\n", errno, strerror(errno));
+		return (-1);
+	}
+	*/
+
 	if (access(path1, X_OK))
 	{
 		fprintf(stderr, "access path1 error : %d : %s\n", errno, strerror(errno));
@@ -91,7 +121,7 @@ int	pingpong(char *path1, char **path2, char **env)
 		return (-1);
 	}
 	if (pid_fork1 == 0)
-		solver_fork(path1, env, fd_a_to_b_write, fd_b_to_a_read);
+		solver_fork(path1, env, fifo1, fifo2);
 	else 
 	{
 		pid_fork2 = fork();
@@ -103,7 +133,7 @@ int	pingpong(char *path1, char **path2, char **env)
 			return (-1);
 		}
 		if (pid_fork2 == 0)
-			subject_fork(path2, env, fd_b_to_a_write, fd_a_to_b_read);
+			subject_fork(path2, env, fifo2, fifo1);
 		else
 		{
 			if (waitpid(pid_fork2, NULL, 0) == -1)
