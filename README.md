@@ -18,8 +18,8 @@ then command "./script" does exactly the test "./pingpong ping pong"
 Test succeed if terminal output become :  
 pingpong : ping start  
 pingpong : pong start  
-pong : Me too !  
 ping : I'm alive !  
+pong : Me too !  
 pong : ping said to me PING!   
 ping : pong said to me PONG!  
 pong : ping said to me PING!  
