@@ -24,6 +24,5 @@ pong : ping said to me PING!
 ping : pong said to me PONG!  
 pong : ping said to me PING!  
 ping : pong said to me PONG!  
-ping : pong said to me PING!  
-pong : ping said to me PONG!  
+pong : ping said to me PING!  
 ...  
