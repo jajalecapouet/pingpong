@@ -6,11 +6,6 @@ This program used to do a link between 2 others programs 'a' and 'b' following t
 -	to talk to 'b', 'a' has to write in stdout, same for the other way  
 -	to listen to 'b', 'a' has to listen to stdin, same for the other way  
 
-Not working at the moment  
-
-In process :  
-Using mkfifo() unstead of pipe()
-
 command "make" will create the pingpong binary + 2 binaries "ping" and "pong" to test the program.  
 
 then command "./script" does exactly the test "./pingpong ping pong"  

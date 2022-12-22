@@ -75,35 +75,6 @@ int	pingpong(char *path1, char **path2, char **env)
 
 	fprintf(stderr, "fifos created\n");
 
-	/*
-	int	fd_a_to_b_read = open(fifo1, O_RDONLY | O_ASYNC | O_NONBLOCK);
-	fprintf(stderr, "open fifo1 read_only done, his fd is %d.\n", fd_a_to_b_read);
-	int	fd_a_to_b_write = open(fifo1, O_WRONLY | O_ASYNC);
-	fprintf(stderr, "open fifo1 write_only done, his fd is %d.\n", fd_a_to_b_write);
-	int	fd_b_to_a_read = open(fifo2, O_RDONLY | O_ASYNC | O_NONBLOCK);
-	fprintf(stderr, "open fifo2 read_only done, his fd is %d.\n", fd_b_to_a_read);
-	int	fd_b_to_a_write = open(fifo2, O_WRONLY | O_ASYNC);
-	fprintf(stderr, "open fifo2 write_only done, his fd is %d.\n", fd_b_to_a_write);
-	if (fd_a_to_b_read == -1 || fd_a_to_b_write == -1 || fd_b_to_a_read == -1 || fd_b_to_a_write == -1)
-	{
-		fprintf(stderr, "fifo open error : %d : %s\n", errno, strerror(errno));
-		return (-1);
-	}
-	*/
-
-	/*
-	int	fd_a_to_b = open(fifo1, O_RDWR);
-	fprintf(stderr, "open fifo1 read_only done, his fd is %d.\n", fd_a_to_b);
-	int	fd_b_to_a = open(fifo2, O_RDWR);
-	fprintf(stderr, "open fifo2 read_only done, his fd is %d.\n", fd_b_to_a);
-
-	if (fd_a_to_b == -1 || fd_b_to_a == -1)
-	{
-		fprintf(stderr, "fifo open error : %d : %s\n", errno, strerror(errno));
-		return (-1);
-	}
-	*/
-
 	if (access(path1, X_OK))
 	{
 		fprintf(stderr, "access path1 error : %d : %s\n", errno, strerror(errno));

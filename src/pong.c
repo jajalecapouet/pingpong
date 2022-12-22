@@ -12,7 +12,7 @@ int main()
 	fprintf(stderr, "pong : Me too !\n");
 	while (1)
 	{
-		fgets(line, 48, stdin);
+		read(0, line, 20);
 		fprintf(stderr, "pong : ping said to me %s", line);
 		sleep(1);
 		write(1, "PONG!\n", 7);

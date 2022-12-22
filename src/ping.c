@@ -14,7 +14,7 @@ int main()
 	{
 		sleep(1);
 		write(1, "PING!\n", 7);
-		fgets(line, 48, stdin);
+		read(0, line, 20);
 		fprintf(stderr, "ping : pong said to me %s", line);
 	}
 }
