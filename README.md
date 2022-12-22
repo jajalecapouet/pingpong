@@ -9,6 +9,8 @@ This program used to do a link between 2 others programs 'a' and 'b' following t
 # task to do : 
 -	signal handler to kill and avoid zomby process
 
+# exemple :
+
 command "make" will create the pingpong binary + 2 binaries "ping" and "pong" to test the program.  
 
 then command "./script" does exactly the test "./pingpong ping pong"  
