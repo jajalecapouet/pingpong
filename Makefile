@@ -1,5 +1,6 @@
 NAME = pingpong
 CC = gcc
+CPP = c++
 FLAGS = -Wall -Wextra -Werror
 
 PATH_SRCS = src
@@ -14,7 +15,7 @@ OBJS =		$(addprefix ${PATH_OBJS}/,${LST_OBJS})
 
 all :				${NAME} Makefile
 					${CC} src/ping.c -o ping
-					${CC} src/pong.c -o pong
+					${CPP} src/pong.cpp -o pong
 
 ${NAME} :			${OBJS}
 					${CC} ${FLAGS} ${OBJS} -o $@
