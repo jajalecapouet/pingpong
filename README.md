@@ -13,7 +13,7 @@ This program used to do a link between 2 others programs 'a' and 'b' following t
 
 command "make" will create the pingpong binary + 2 binaries "ping" and "pong" to test the program.  
 
-then command "./script" does exactly the test "./pingpong ping pong"  
+then command "sh script" does exactly the test "./pingpong ping pong"  
 
 Test succeed if terminal output become :  
 pingpong : ping start  
